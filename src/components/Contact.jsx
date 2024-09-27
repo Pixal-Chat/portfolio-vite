@@ -1,11 +1,9 @@
-import React, { useRef, useState } from "react";
-import { motion } from "framer-motion";
 import emailjs from "@emailjs/browser";
+import { motion, useAnimation } from "framer-motion";
+import React, { useEffect, useRef, useState } from "react";
 
-import { stylesEarth } from "../stylesEarth";
-import { EarthCanvas } from "./canvas";
 import { SectionWrapper } from "../hoc";
-import { slideInEarth } from "../utils/motion";
+import { styles } from "../styles";
 
 const Contact = () => {
   const formRef = useRef();
@@ -16,79 +14,71 @@ const Contact = () => {
   });
 
   const [loading, setLoading] = useState(false);
+  const controls = useAnimation();
 
-  const handleChange = (e) => {
-    const { target } = e;
-    const { name, value } = target;
+  useEffect(() => {
+    controls.start("show");
+  }, [controls]);
 
-    setForm({
-      ...form,
-      [name]: value,
-    });
-  };
   return (
     <div
-      className={`xl:mt-12 flex xl:flex-row flex-col-reverse gap-10 overflow-hidden`}
+      className="md:m-12 md:px-48 flex flex-col sm:flex-row gap-10 overflow-hidden"
     >
       <motion.div
-        variants={slideInEarth("left", "tween", 0.2, 1)}
-        className='flex-[0.75] bg-black-100 p-8 rounded-2xl'
+        initial="hidden"
+        animate={controls}
+        variants={{
+          hidden: {
+            opacity: 0,
+            y: 100,
+          },
+          show: {
+            opacity: 1,
+            y: 0,
+            transition: {
+              type: "tween",
+              duration: 1,
+              delay: 0.2,
+            },
+          },
+        }}
+        className='flex-[0.8] md:pb-40 mx-4 sm:mx-auto'
       >
-        <h3 className={stylesEarth.sectionHeadText}>Contact.</h3>
+        <h3 className={styles.sectionText}>Contact</h3>
 
         <form
-          action="https://getform.io/f/8b086558-47d4-49d0-852d-ec8c22da40f7"
+          action="https://getform.io/f/alljrjka"
           method="POST"
-          className='mt-12 flex flex-col gap-8'
+          className="mt-12 gap-4 flex flex-col"
         >
-          <label className='flex flex-col'>
-            <span className='text-white font-medium mb-4'>Your Name</span>
-            <input
-              type='text'
-              name='name'
-              value={form.name}
-              onChange={handleChange}
-              placeholder="What's your good name?"
-              className='bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium'
-            />
-          </label>
-          <label className='flex flex-col'>
-            <span className='text-white font-medium mb-4'>Your email</span>
-            <input
-              type='email'
-              name='email'
-              value={form.email}
-              onChange={handleChange}
-              placeholder="What's your web address?"
-              className='bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium'
-            />
-          </label>
-          <label className='flex flex-col'>
-            <span className='text-white font-medium mb-4'>Your Message</span>
-            <textarea
-              rows={7}
-              name='message'
-              value={form.message}
-              onChange={handleChange}
-              placeholder='What you want to say?'
-              className='bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium'
-            />
-          </label>
-
+          <span className='text-white font-medium mt-3'>Full Name</span>
+          <input
+            type="text"
+            name="name"
+            placeholder="Enter your full name"
+            className="bg-tertiary p-4 text-white border font-medium"
+          />
+          <span className='text-white font-medium mt-3'>Email Address</span>
+          <input
+            type="text"
+            name="email"
+            placeholder="Enter your email address"
+            className="bg-tertiary p-4 text-white border font-medium"
+          />
+          <span className='text-white font-medium mt-3'>Message</span>
+          <textarea
+            name="message"
+            placeholder="Enter your message"
+            rows="10"
+            className="bg-tertiary p-4 text-white border font-medium"
+          />
           <button
             type='submit'
-            className='bg-tertiary py-3 px-8 rounded-xl outline-none w-fit text-white font-bold shadow-md shadow-primary'
+            className='bg-tertiary py-3 px-8 w-fit text-white font-bold shadow-md shadow-primary '
           >
             {loading ? "Sending..." : "Send"}
           </button>
         </form>
-      </motion.div>
-
-      <motion.div
-        variants={slideInEarth("right", "tween", 0.2, 1)}
-        className='xl:flex-1 xl:h-auto md:h-[550px] h-[350px]'
-      >
-        <EarthCanvas />
       </motion.div>
     </div>
   );
